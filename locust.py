@@ -1,9 +1,8 @@
-from flask import Flask
-app = Flask(__name__)
+from locust import HttpUser, task, between
 
-@app.route('/')
-def home():
-    return {"message": "Hello from Flask on Minikube!"}
+class FastAPIUser(HttpUser):
+    wait_time = between(1, 2)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    @task
+    def get_root(self):
+        self.client.get("/")
